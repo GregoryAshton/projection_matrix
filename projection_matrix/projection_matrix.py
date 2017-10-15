@@ -3,7 +3,17 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
 
-def projection_matrix(D, xyz, labels=None, projection=np.max, max_n_ticks=4,
+def slice_max(D, axis):
+    """ Return the slice along the given axis """
+    idxs = [range(D.shape[j]) for j in range(D.ndim)]
+    max_idx = list(np.unravel_index(D.argmax(), D.shape))
+    for k in np.atleast_1d(axis):
+        idxs[k] = [max_idx[k]]
+    res = np.squeeze(D[np.ix_(*tuple(idxs))])
+    return res
+
+
+def projection_matrix(D, xyz, labels=None, projection=slice_max, max_n_ticks=4,
                       factor=3):
     """ Generate a projection matrix plot
 
@@ -20,7 +30,8 @@ def projection_matrix(D, xyz, labels=None, projection=np.max, max_n_ticks=4,
         labels, the final label is for the dependent variable.
     projection: func
         Function to use for projection, must take an `axis` argument. Default
-        is `np.max()`, to project out a slice along the maximum.
+        is `projection_matrix.slice_max()`, to project out a slice along the
+        maximum.
     max_n_ticks: int
         Number of ticks for x and y axis of the `pcolormesh` plots
     factor: float
@@ -100,3 +111,6 @@ def projection_1D(ax, x, D, xidx, projection):
     ax.yaxis.tick_right()
     ax.yaxis.set_label_position("right")
     return ax
+
+
+
