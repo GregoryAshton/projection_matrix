@@ -85,6 +85,9 @@ def projection_matrix(D, xyz, labels=None, projection='max_slice',
     plotdim = factor * ndim + factor * (ndim - 1.) * whspace
     dim = lbdim + plotdim + trdim
 
+    if len(labels) == ndim:
+        labels[-1] = ''
+
     if type(projection) == str:
         if projection in ['log_mean']:
             projection = log_mean
