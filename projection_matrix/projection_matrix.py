@@ -86,7 +86,7 @@ def projection_matrix(D, xyz, labels=None, projection='max_slice',
     dim = lbdim + plotdim + trdim
 
     if len(labels) == ndim:
-        labels[-1] = ''
+        labels.append('')
 
     if type(projection) == str:
         if projection in ['log_mean']:
@@ -147,10 +147,12 @@ def projection_2D(ax, x, y, D, xidx, yidx, projection, **kwargs):
     D2D = projection(D, axis=tuple(flat_idxs), **kwargs)
     X, Y = np.meshgrid(x, y, indexing='ij')
     pax = ax.pcolormesh(Y, X, D2D.T, vmin=D.min(), vmax=D.max())
+    ax.grid(lw=0.1, zorder=10)
     return ax, pax
 
 
 def projection_1D(ax, x, D, xidx, projection, **kwargs):
+    ax.grid(lw=0.1)
     flat_idxs = range(D.ndim)
     flat_idxs.remove(xidx)
     D1D = projection(D, axis=tuple(flat_idxs), **kwargs)
